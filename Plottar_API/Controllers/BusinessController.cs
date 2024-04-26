@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Plottar_API.Data;
 using Plottar_API.Models.Dto;
 
@@ -106,7 +107,28 @@ namespace Plottar_API.Controllers
       currentBusiness.PostalCode = business.PostalCode;
 
       return Ok(currentBusiness);
+    }
+    [HttpPatch("{id}")]
+    public IActionResult UpdatePartialBusiness(string id,JsonPatchDocument<BusinessDto> business)
+    {
+      if (Guid.TryParse(id, out Guid _) == false)
+      {
+        return BadRequest(new { message = "Invalid request" });
+      }
 
+      var currentBusiness = BusinessStore.businessList.FirstOrDefault(b => b.Id == Guid.Parse(id));
+      if (currentBusiness == null)
+      {
+        return NotFound(new { message = "Business not found" });
+      }
+      business.ApplyTo(currentBusiness, ModelState);
+
+      if(!ModelState.IsValid)
+      {
+        return BadRequest(ModelState);
+      }
+
+      return Ok(currentBusiness);
     }
   }
 }
