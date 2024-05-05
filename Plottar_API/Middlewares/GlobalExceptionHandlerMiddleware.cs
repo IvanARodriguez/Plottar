@@ -24,7 +24,7 @@ namespace Plottar_API.Middlewares
 
         ctx.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-        ProblemDetails problem = new ProblemDetails()
+        ProblemDetails problem = new()
         {
           Status = (int)HttpStatusCode.InternalServerError,
           Type = "Server error",

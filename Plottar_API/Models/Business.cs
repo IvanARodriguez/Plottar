@@ -27,11 +27,12 @@ namespace Plottar_API.Models
 
     public string? State { get; set; }
 
+    [MaxLength(5, ErrorMessage = "Postal code must be 5 digits")]
     public string? PostalCode { get; set; }
 
     public string? Country { get; set; }
 
-    [MaxLength(5, ErrorMessage = "Invalid postal code")]
+    [MaxLength(10, ErrorMessage = "Phone number should be 10 digits")]
     public string? Phone { get; set; }
   }
 }

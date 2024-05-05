@@ -11,15 +11,17 @@ namespace Plottar_API.Data
     {
       modelBuilder.HasPostgresExtension("uuid-ossp");
 
-      modelBuilder.Entity<Business>().HasData(
-        new Business(){
-          Name = "Hitab",
-          Address = "3801 Vitruvian Way",
-          City = "Addison",
-          State = "Texas",
-          Country = "United States",
-          PostalCode="38001"
-        }
+      modelBuilder
+        .Entity<Business>()
+        .HasData(
+          new Business(){
+            Name = "Hitab",
+            Address = "3801 Vitruvian Way",
+            City = "Addison",
+            State = "Texas",
+            Country = "United States",
+            PostalCode="38001"
+          }
         );
     }
   }
