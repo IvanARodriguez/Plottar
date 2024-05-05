@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Plottar_API.Data;
 using Plottar_API.Models.Dto;
 
@@ -7,14 +8,14 @@ namespace Plottar_API.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class BusinessController(ILogger<BusinessController> logger) : ControllerBase
+  public class BusinessController(ILogger<BusinessController> Logger) : ControllerBase
   {
-    private readonly ILogger<BusinessController> _logger = logger;
+    private readonly ILogger<BusinessController> logger = Logger;
 
     [HttpGet]
     public ActionResult<IEnumerable<BusinessDto>> GetBusinesses()
     {
-      _logger.LogInformation("Get Route has been hit");
+      logger.LogInformation("Get Route has been hit");
       return Ok(BusinessStore.businessList);
     }
 
@@ -28,12 +29,14 @@ namespace Plottar_API.Controllers
 
       if (String.IsNullOrEmpty(id) || !isValidGuid)
       {
+        logger.LogError("Id was not provided to get business by id");
         return BadRequest(new { message =  "Invalid Request"});
       }
       var business = BusinessStore.businessList.FirstOrDefault(b => b.Id == Guid.Parse(id));
 
       if (business == null)
       {
+        logger.LogError($"Business with id {id} not found");
         return NotFound(new { message = "Business not found" });
       }
 
