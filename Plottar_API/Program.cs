@@ -1,6 +1,8 @@
 using Plottar_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Microsoft.AspNetCore.HttpLogging;
+using Plottar_API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
 // Retrieve database username and password from configuration
 var dbUsername = builder.Configuration["plottar_db_username"];
@@ -65,8 +69,9 @@ catch (NpgsqlException ex)
 {
   Console.WriteLine($"Error connecting to PostgreSQL: {ex.Message}");
 }
-
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseAuthorization();
 
