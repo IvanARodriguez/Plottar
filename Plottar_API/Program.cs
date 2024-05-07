@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Microsoft.AspNetCore.HttpLogging;
 using Plottar_API.Middlewares;
+using Plottar_API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
-
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 // Retrieve database username and password from configuration
 var dbUsername = builder.Configuration["plottar_db_username"];
 var dbPassword = builder.Configuration["plottar_db_password"];

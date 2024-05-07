@@ -1,19 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 
-namespace Plottar_API.Models
+namespace Plottar_API.Models.Dto
 {
-  [Index(nameof(ImageUrl), IsUnique = true)]
-  [Index(nameof(Name), IsUnique = true)]
-  public class Business
+  public class BusinessCreateDto
   {
-    [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    [StringLength(50)]
+    [MaxLength(50)]
     public required string Name { get; set; }
 
     public string? ImageUrl { get; set; }

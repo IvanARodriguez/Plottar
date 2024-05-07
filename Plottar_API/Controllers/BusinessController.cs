@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,16 +11,18 @@ namespace Plottar_API.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class BusinessController(ILogger<BusinessController> Logger, ApplicationDBContext dBContext) : ControllerBase
+  public class BusinessController(ILogger<BusinessController> logger, ApplicationDBContext dBContext, IMapper mapper) : ControllerBase
   {
-    private readonly ILogger<BusinessController> _logger = Logger;
+    private readonly ILogger<BusinessController> _logger = logger;
     private readonly ApplicationDBContext _dBContext = dBContext;
+    private readonly IMapper _mapper = mapper;
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BusinessDto>>> GetBusinessesAsync()
     {
       _logger.LogInformation("Get Route has been hit");
-      return Ok(await _dBContext.Businesses.ToListAsync());
+      IEnumerable<Business> businessList = await _dBContext.Businesses.ToListAsync();
+      return Ok(_mapper.Map<IEnumerable<BusinessDto>>(businessList));
     }
 
     [HttpGet("id", Name ="GetBusiness")]
@@ -44,41 +47,29 @@ namespace Plottar_API.Controllers
         return NotFound(new { message = "Business not found" });
       }
 
-      return Ok(business);
+      return Ok(_mapper.Map<BusinessDto>(business));
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<BusinessDto>> CreateBusinessAsync([FromBody] BusinessDto business)
+    public async Task<ActionResult<BusinessDto>> CreateBusinessAsync([FromBody] BusinessCreateDto businessCreateDto)
     {
       if(!ModelState.IsValid)
       {
         return BadRequest(ModelState);
       }
-      if (await _dBContext.Businesses.FirstOrDefaultAsync(b => b.Name.ToLower() == business.Name.ToLower()) != null)
+      if (await _dBContext.Businesses.FirstOrDefaultAsync(b => b.Name.ToLower() == businessCreateDto.Name.ToLower()) != null)
       {
         ModelState.AddModelError("InvalidName", "Business already exist");
         return BadRequest(ModelState);
       }
-      if (business == null || business.Name == null)
+      if (businessCreateDto == null || businessCreateDto.Name == null)
       {
         return BadRequest(new { message = "Invalid Request" });
       }
-      Business model = new()
-      { 
-        
-        Name = business.Name, 
-        City = business.City,
-        Address = business.Address,
-        Country = business.Country,
-        ImageUrl = business.ImageUrl,
-        Phone = business.Phone,
-        PostalCode = business.PostalCode,
-        State = business.State,
-      };
-
+      Business model = _mapper.Map<Business>(businessCreateDto);
       await _dBContext.Businesses.AddAsync(model);
 
       await _dBContext.SaveChangesAsync();
@@ -111,30 +102,22 @@ namespace Plottar_API.Controllers
     }
 
     [HttpPut("{id}")]
-    public async Task <IActionResult> UpdateBusiness(string id, [FromBody] BusinessDto businessDto)
+    public async Task <IActionResult> UpdateBusiness(string id, [FromBody] BusinessUpdateDto businessUpdateDto)
     {
       if (Guid.TryParse(id, out Guid _) == false)
       {
         return BadRequest(new { message = "Invalid ID" });
       }
-      if (businessDto == null || Guid.Parse(id) != businessDto.Id)
-      {
-        return BadRequest(new { message = "Invalid request" });
-      }
+
+      Business business = _mapper.Map<Business>(businessUpdateDto);
+
       var currentBusiness = await _dBContext.Businesses.FirstOrDefaultAsync(b => b.Id == Guid.Parse(id));
 
       if (currentBusiness == null)
       {
         return NotFound(new { message = "Business not found" });
       }
-      // Update properties of the existing entity
-      currentBusiness.Name = businessDto.Name;
-      currentBusiness.Address = businessDto.Address;
-      currentBusiness.Phone = businessDto.Phone;
-      currentBusiness.City = businessDto.City;
-      currentBusiness.State = businessDto.State;
-      currentBusiness.Country = businessDto.Country;
-      currentBusiness.UpdatedDate = DateTime.UtcNow; // Use UTC time
+      
 
       _dBContext.Businesses.Update(currentBusiness);
       await _dBContext.SaveChangesAsync();
@@ -143,7 +126,7 @@ namespace Plottar_API.Controllers
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> UpdatePartialBusiness(string id, JsonPatchDocument<BusinessDto> patchDto)
+    public async Task<IActionResult> UpdatePartialBusiness(string id, JsonPatchDocument<BusinessUpdateDto> patchDto)
     {
       if (Guid.TryParse(id, out Guid _) == false)
       {
@@ -156,32 +139,16 @@ namespace Plottar_API.Controllers
       {
         return NotFound(new { message = "Business not found" });
       }
-      BusinessDto businessDto = new() 
-      {
-        Id = business.Id, 
-        Name = business.Name,
-        Address = business.Address,
-        Phone = business.Phone,
-        City = business.City,
-        State = business.State,
-        Country = business.Country,
-        UpdatedDate = DateTime.UtcNow
+      BusinessUpdateDto businessDto = _mapper.Map<BusinessUpdateDto>(business);
 
-      };
-      
       patchDto.ApplyTo(businessDto, ModelState);
 
       if(!ModelState.IsValid)
       {
         return BadRequest(ModelState);
       }
-      business.Name = businessDto.Name;
-      business.Address = businessDto.Address;
-      business.Phone = businessDto.Phone;
-      business.City = businessDto.City;
-      business.State = businessDto.State;
-      business.Country = businessDto.Country;
-      business.UpdatedDate = businessDto.UpdatedDate;
+      
+      Business model = _mapper.Map<Business>(businessDto);
 
       _dBContext.Businesses.Update(business);
 
