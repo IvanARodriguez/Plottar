@@ -1,36 +1,39 @@
 namespace Plottar_API_FSharp
 #nowarn "20"
 open System
-open System.Collections.Generic
-open System.IO
-open System.Linq
-open System.Threading.Tasks
-open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
-open Microsoft.AspNetCore.HttpsPolicy
-open Microsoft.Extensions.Configuration
-open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
+open Microsoft.Extensions.DependencyInjection
+open Giraffe
 
 module Program =
-    let exitCode = 0
+
+    let webApp =
+        choose [
+            route "/test"   >=> json {|message="Working"|}
+            route "/"       >=> htmlFile "/pages/index.html" ]
+
+    type Startup() =
+        member __.ConfigureServices (services : IServiceCollection) =
+            // Register default Giraffe dependencies
+            services.AddGiraffe() |> ignore
+
+        member __.Configure (app : IApplicationBuilder)
+                            (env : IHostEnvironment)
+                            (loggerFactory : ILoggerFactory) =
+            // Add Giraffe to the ASP.NET Core pipeline
+            app.UseGiraffe webApp
 
     [<EntryPoint>]
-    let main args =
-
-        let builder = WebApplication.CreateBuilder(args)
-
-        builder.Services.AddControllers()
-
-        let app = builder.Build()
-
-        app.UseHttpsRedirection()
-
-        app.UseAuthorization()
-        app.MapControllers()
-
-        app.Run()
-
-        exitCode
+    let main _ =
+        Host.CreateDefaultBuilder()
+            .ConfigureWebHostDefaults(
+                fun webHostBuilder ->
+                    webHostBuilder
+                        .UseStartup<Startup>()
+                        |> ignore)
+            .Build()
+            .Run()
+        0
