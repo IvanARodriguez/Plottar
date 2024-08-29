@@ -11,4 +11,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Plottar.Application\Plottar.Application.csproj" />
+    <ProjectReference Include="..\Plottar.Contracts\Plottar.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>
