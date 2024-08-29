@@ -9,7 +9,7 @@
 
 Plottar is a web application built with Asp.Net Core using C#, Postgres among other technologies. This project aims to ease the Job posting by anonymous users for the tech industry. People who visit the site will be able to find interesting jobs, filter by what they are looking for and apply by clicking the link of the position.
 
-<div style="margin: 3rem auto; max-width: 500px;">
+<div style="margin: 3rem auto; max-width: 300px;">
   <img src="https://firebasestorage.googleapis.com/v0/b/backer-bb647.appspot.com/o/clean-arch.png?alt=media&token=a4cbb745-a865-4cb2-aada-6f5c1dc5dc5a" alt="Backer Project Diagram">
 </div>
 
