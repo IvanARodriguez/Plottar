@@ -1,0 +1,12 @@
+@port = 9000
+@api_url = http://localhost:{{port}}
+
+POST {{api_url}}/auth/login
+Content-Type: application/json
+
+{
+  "lastName": "Doe",
+  "firstName": "John",
+  "email": "j.doe@sample.com",
+  "password": "johnDoePass01"
+}

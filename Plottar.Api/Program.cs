@@ -1,9 +1,22 @@
-var builder = WebApplication.CreateBuilder(args);
+using Plottar.Api.HttpHandler;
+using Plottar.Application.Services;
 
-builder.Services.AddEndpointsApiExplorer();
+var builder = WebApplication.CreateBuilder(args);
+{
+  builder.Services.AddEndpointsApiExplorer();
+  builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+  builder.Services.AddHttpLogging(logger =>
+  {
+    logger.MediaTypeOptions.AddText("application/javascript");
+    logger.CombineLogs = true;
+  });
+}
+
 
 var app = builder.Build();
+{
+  app.UseHttpsRedirection();
+  app.MapAuthRoutes();
+  app.Run();
+}
 
-app.UseHttpsRedirection();
-
-app.Run();
