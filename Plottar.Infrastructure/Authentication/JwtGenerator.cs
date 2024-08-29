@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Plottar.Application.Common.Interfaces.Authentication;
 using Plottar.Application.Common.Interfaces.Services;
 using Microsoft.Extensions.Options;
+using Plottar.Domain;
 
 public class JwtGenerator(
           IConfiguration configuration,
@@ -18,7 +19,7 @@ public class JwtGenerator(
   private readonly IDateTimeProvider dateProvider = dateTimeProvider;
   private readonly JwtSettings jwtSettings = jwtOptions.Value;
 
-  public string GenerateToken(Guid userId, string firstName, string lastName)
+  public string GenerateToken(User user)
   {
     var secret = this.config["JWT_SECRET"] ?? throw new NotImplementedException("No jwt secret found");
 
@@ -28,11 +29,10 @@ public class JwtGenerator(
 
     var claims = new[]
     {
-        new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-        new Claim(JwtRegisteredClaimNames.GivenName, firstName),
-        new Claim(JwtRegisteredClaimNames.FamilyName, lastName),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+        new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString())
     };
 
     var securityToken = new JwtSecurityToken(

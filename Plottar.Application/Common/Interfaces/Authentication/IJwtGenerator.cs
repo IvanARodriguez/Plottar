@@ -1,6 +1,8 @@
 namespace Plottar.Application.Common.Interfaces.Authentication;
 
+using Plottar.Domain;
+
 public interface IJwtGenerator
 {
-  string GenerateToken(Guid userId, string firstName, string lastName);
+  string GenerateToken(User user);
 }

@@ -16,10 +16,10 @@ public static class AuthenticationHandler
                req.LastName);
 
        var response = new AuthenticationResponse(
-               authResult.Id,
-               authResult.FirstName,
-               authResult.LastName,
-               authResult.Email,
+               authResult.User.Id,
+               authResult.User.FirstName,
+               authResult.User.LastName,
+               authResult.User.Email,
                authResult.Token
            );
 
@@ -27,19 +27,17 @@ public static class AuthenticationHandler
      }
     );
 
-    endpoints.MapPost("/auth/login", (RegisterRequest req, IAuthenticationService authService) =>
+    endpoints.MapPost("/auth/login", (LoginRequest req, IAuthenticationService authService) =>
      {
-       var authResult = authService.Register(
+       var authResult = authService.Login(
                req.Email,
-               req.Password,
-               req.FirstName,
-               req.LastName);
+               req.Password);
 
        var response = new AuthenticationResponse(
-               authResult.Id,
-               authResult.FirstName,
-               authResult.LastName,
-               authResult.Email,
+               authResult.User.Id,
+               authResult.User.FirstName,
+               authResult.User.LastName,
+               authResult.User.Email,
                authResult.Token
            );
 
