@@ -4,6 +4,9 @@
 
 - [Overview](#overview)
 - [Key Technologies](#key-technologies)
+- [Project Structure](#project-structure)
+- [Folder Descriptions](#folder-description)
+- [Environment Variables](#environment-variables)
 
 ## Overview
 
@@ -59,3 +62,30 @@ Backer
    - Contains all request endpoints documentations using http files
 7. **Docs:**
    - Extensive documentation about projects and libraries
+
+## Environment Variables
+
+### JWT_SECRET
+
+**Description:**  
+The `JWT_SECRET` environment variable is a critical part of the security configuration for Plottar. It holds the secret key used for signing JWT (JSON Web Tokens), which are essential for securing API requests and managing user authentication within the application.
+
+**Usage:**  
+This secret is accessed by the `JwtGenerator` class in the `Plottar.Infrastructure.Authentication` namespace to generate JWT tokens for authenticated users. The secret ensures that the tokens are securely signed, preventing unauthorized access.
+
+**Setup:**
+
+1. **Initialize User Secrets:**  
+   Run the following commands in the terminal at the root of your project:
+
+   ```bash
+   dotnet user-secrets init
+   ```
+
+2. **Set the JWT_SECRET:**
+
+   ```bash
+   dotnet user-secrets set "JWT_SECRET" "your-secret-key"
+   ```
+
+   Replace "your-secret-key" with a strong, unique secret string.

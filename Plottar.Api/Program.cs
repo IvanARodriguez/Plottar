@@ -4,6 +4,7 @@ using Plottar.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+  builder.Configuration.AddUserSecrets<Program>();
   builder.Services
     .AddApplication()
     .AddEndpointsApiExplorer()

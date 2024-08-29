@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["ASPNETCORE", "dotnet", "Plottar"],
+  "cSpell.words": ["ASPNETCORE", "dotnet", "Hmac", "Plottar"],
   "[csharp]": {
     "editor.formatOnSave": true
   },
