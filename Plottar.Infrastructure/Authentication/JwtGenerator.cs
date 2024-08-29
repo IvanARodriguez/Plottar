@@ -6,13 +6,21 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Plottar.Application.Common.Interfaces.Authentication;
+using Plottar.Application.Common.Interfaces.Services;
+using Microsoft.Extensions.Options;
 
-public class JwtGenerator(IConfiguration configuration) : IJwtGenerator
+public class JwtGenerator(
+          IConfiguration configuration,
+          IDateTimeProvider dateTimeProvider,
+          IOptions<JwtSettings> jwtOptions) : IJwtGenerator
 {
+  private readonly IConfiguration config = configuration;
+  private readonly IDateTimeProvider dateProvider = dateTimeProvider;
+  private readonly JwtSettings jwtSettings = jwtOptions.Value;
+
   public string GenerateToken(Guid userId, string firstName, string lastName)
   {
-
-    var secret = configuration["JWT_SECRET"] ?? throw new NotImplementedException("No jwt secret found");
+    var secret = this.config["JWT_SECRET"] ?? throw new NotImplementedException("No jwt secret found");
 
     var signingCreds = new SigningCredentials(
       new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
@@ -27,7 +35,12 @@ public class JwtGenerator(IConfiguration configuration) : IJwtGenerator
         new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString())
     };
 
-    var securityToken = new JwtSecurityToken(issuer: "Plottar", claims: claims, signingCredentials: signingCreds, expires: DateTime.Now.AddDays(1));
+    var securityToken = new JwtSecurityToken(
+      claims: claims,
+      issuer: this.jwtSettings.Issuer,
+      signingCredentials: signingCreds,
+      audience: this.jwtSettings.Audience,
+      expires: this.dateProvider.UtcNow.AddMinutes(this.jwtSettings.ExpirationMinutes));
 
     return new JwtSecurityTokenHandler().WriteToken(securityToken);
   }
