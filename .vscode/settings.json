@@ -2,5 +2,6 @@
   "cSpell.words": ["ASPNETCORE", "dotnet", "Plottar"],
   "[csharp]": {
     "editor.formatOnSave": true
-  }
+  },
+  "FSharp.suggestGitignore": false
 }

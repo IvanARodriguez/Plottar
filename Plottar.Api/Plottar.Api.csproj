@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plottar.Infrastructure\Plottar.Infrastructure.csproj" />
     <ProjectReference Include="..\Plottar.Application\Plottar.Application.csproj" />
     <ProjectReference Include="..\Plottar.Contracts\Plottar.Contracts.csproj" />
   </ItemGroup>
