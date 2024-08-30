@@ -1,6 +1,9 @@
 namespace Plottar.Application.Services;
+
+using ErrorOr;
+
 public interface IAuthenticationService
 {
-  AuthenticationResult Register(string email, string password, string firstName, string lastName);
-  AuthenticationResult Login(string email, string password);
+  ErrorOr<AuthenticationResult> Register(string email, string password, string firstName, string lastName);
+  ErrorOr<AuthenticationResult> Login(string email, string password);
 }

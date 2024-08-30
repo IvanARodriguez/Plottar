@@ -1,40 +1,42 @@
 namespace Plottar.Application.Services;
 
-using System.ComponentModel.DataAnnotations;
+using ErrorOr;
 using Plottar.Application.Common.Interfaces.Authentication;
 using Plottar.Application.Common.Interfaces.Persistence;
 using Plottar.Domain;
+using Plottar.Domain.Common.Errors;
 
 public class AuthenticationService(IJwtGenerator jwtGen, IUserRepository userRepo) : IAuthenticationService
 {
   private readonly IJwtGenerator jwtGenerator = jwtGen;
   private readonly IUserRepository userRepository = userRepo;
 
-  public AuthenticationResult Login(string email, string password)
+  public ErrorOr<AuthenticationResult> Login(string email, string password)
   {
     // 1. Validate user exists
     if (this.userRepository.GetUserByEmail(email) is not User user)
     {
-      throw new ArgumentException("User not found", email);
+      return Errors.Authentication.InvalidCredentials;
     }
     // 2. Validate Password is correct
     if (user.Password != password)
     {
-      throw new ValidationException("Invalid password");
+      return Errors.Authentication.InvalidCredentials;
     }
 
     // 3. Create JWT
     var token = this.jwtGenerator.GenerateToken(user);
 
-    return new(user, token);
+    return new AuthenticationResult(user, token);
   }
 
-  public AuthenticationResult Register(string email, string password, string firstName, string lastName)
+  public ErrorOr<AuthenticationResult> Register(string email, string password, string firstName, string lastName)
   {
     // 1. Validate User doesn't Exists
     if (this.userRepository.GetUserByEmail(email) is not null)
     {
-      throw new ArgumentException("User with this email already exists!", email);
+      return Errors.User.DuplicateEmail;
+      ;
     }
     // 2. Create user (generate Unique Id), save to Db
     var user = new User
@@ -51,6 +53,6 @@ public class AuthenticationService(IJwtGenerator jwtGen, IUserRepository userRep
     // 3. Create JWT Token
     var token = this.jwtGenerator.GenerateToken(user);
 
-    return new(user, token);
+    return new AuthenticationResult(user, token);
   }
 }
