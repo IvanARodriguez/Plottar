@@ -16,15 +16,16 @@ public class LoginQueryHandler(IJwtGenerator jwtGen, IUserRepository userRepo) :
 {
   private readonly IJwtGenerator jwtGenerator = jwtGen;
   private readonly IUserRepository userRepository = userRepo;
-  public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
+  public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery request, CancellationToken cancellationToken)
   {
+    await Task.CompletedTask;
     // 1. Validate user exists
-    if (this.userRepository.GetUserByEmail(query.Email) is not User user)
+    if (this.userRepository.GetUserByEmail(request.Email) is not User user)
     {
       return Errors.Authentication.InvalidCredentials;
     }
     // 2. Validate Password is correct
-    if (user.Password != query.Password)
+    if (user.Password != request.Password)
     {
       return Errors.Authentication.InvalidCredentials;
     }

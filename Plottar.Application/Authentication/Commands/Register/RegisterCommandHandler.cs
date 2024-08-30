@@ -16,20 +16,21 @@ public class RegisterCommandHandler(IJwtGenerator jwtGen, IUserRepository userRe
 {
   private readonly IJwtGenerator jwtGenerator = jwtGen;
   private readonly IUserRepository userRepository = userRepo;
-  public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+  public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
   {
+    await Task.CompletedTask;
     // 1. Validate User doesn't Exists
-    if (this.userRepository.GetUserByEmail(command.Email) is not null)
+    if (this.userRepository.GetUserByEmail(request.Email) is not null)
     {
       return Errors.User.DuplicateEmail;
     }
     // 2. Create user (generate Unique Id), save to Db
     var user = new User
     {
-      FirstName = command.FirstName,
-      LastName = command.LastName,
-      Email = command.Email,
-      Password = command.Password,
+      FirstName = request.FirstName,
+      LastName = request.LastName,
+      Email = request.Email,
+      Password = request.Password,
       Id = Guid.NewGuid(),
     };
 

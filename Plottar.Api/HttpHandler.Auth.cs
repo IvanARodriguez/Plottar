@@ -1,5 +1,7 @@
 namespace Plottar.Api.HttpHandler;
 
+using ErrorOr;
+using MapsterMapper;
 using MediatR;
 using Plottar.Api.Errors;
 using Plottar.Application.Commands.Register;
@@ -11,39 +13,30 @@ public static class AuthenticationHandler
 {
   public static void MapAuthRoutes(this IEndpointRouteBuilder endpoints)
   {
-    endpoints.MapPost("/auth/register", async (RegisterRequest req, ISender mediator) =>
+    endpoints.MapPost("/auth/register", async (RegisterRequest req, ISender mediator, IMapper mapper) =>
      {
-       var command = new RegisterCommand(req.FirstName, req.LastName, req.Email, req.Password);
+       var command = mapper.Map<RegisterCommand>(req);
        var authResult = await mediator.Send(command);
 
        return authResult.Match(
-        result => Results.Ok(MapResult(result)),
+        result => Results.Ok(mapper.Map<AuthenticationResponse>(result)),
         errors => ErrorHandling.Problem(errors)
        );
      });
 
-    endpoints.MapPost("/auth/login", async (LoginRequest req, ISender mediator) =>
+    endpoints.MapPost("/auth/login", async (LoginRequest req, ISender mediator, IMapper mapper) =>
     {
-      var query = new LoginQuery(req.Email, req.Password);
+      var query = mapper.Map<LoginQuery>(req);
       var authResult = await mediator.Send(query);
       if (authResult.IsError)
       {
 
       }
       return authResult.Match(
-        result => Results.Ok(MapResult(result)),
+        result => Results.Ok(mapper.Map<AuthenticationResponse>(result)),
         errors => ErrorHandling.Problem(errors)
       );
     });
   }
-  private static AuthenticationResponse MapResult(AuthenticationResult result)
-  {
-    return new AuthenticationResponse(
-      result.User.Id,
-      result.User.FirstName,
-      result.User.LastName,
-      result.User.Email,
-      result.Token
-    );
-  }
+
 }
