@@ -1,8 +1,8 @@
-namespace Plottar.Application.Services;
+namespace Plottar.Application.Common;
 
 using Plottar.Domain;
 
 public record AuthenticationResult(
- User User,
+  User User,
   string Token
 );
