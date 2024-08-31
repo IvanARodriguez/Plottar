@@ -4,21 +4,37 @@ namespace Plottar.Application.Common.Behaviors;
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
+using FluentValidation;
 using MediatR;
-using Plottar.Application.Commands.Register;
 
-public class ValidateRegisterCommandBehavior : IPipelineBehavior<RegisterCommand, ErrorOr<AuthenticationResult>>
+public class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? val = null) :
+  IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
+    where TResponse : IErrorOr
 {
-  public async Task<ErrorOr<AuthenticationResult>> Handle(
-    RegisterCommand request,
-    RequestHandlerDelegate<ErrorOr<AuthenticationResult>> next,
+
+  private readonly IValidator<TRequest>? validator = val;
+
+  public async Task<TResponse> Handle(
+    TRequest request,
+    RequestHandlerDelegate<TResponse> next,
     CancellationToken cancellationToken)
   {
-    // Before the handler
-    var result = await next();
+    if (this.validator is null)
+    {
+      return await next();
+    }
+    var validationResult = await this.validator.ValidateAsync(request, cancellationToken);
 
-    // After the handler
+    if (validationResult.IsValid)
+    {
+      return await next();
+    }
 
-    return result;
+    var errors = validationResult.Errors
+    .ConvertAll(err => Error.Validation(err.PropertyName, err.ErrorMessage));
+
+    return (dynamic)errors;
   }
+
 }

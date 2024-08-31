@@ -1,11 +1,15 @@
 namespace Plottar.Api.Errors;
 
 using ErrorOr;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 public static class ErrorHandling
 {
-  public static IResult Problem(List<Error> errors)
+  public static IResult GenerateProblemDetails(HttpContext ctx, List<Error> errors)
   {
+
+    ctx.Items["errors"] = errors;
+
     var firstError = errors[0];
 
     var statusCode = firstError.Type switch

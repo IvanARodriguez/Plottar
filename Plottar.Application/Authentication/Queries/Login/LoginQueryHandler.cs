@@ -27,7 +27,7 @@ public class LoginQueryHandler(IJwtGenerator jwtGen, IUserRepository userRepo) :
     // 2. Validate Password is correct
     if (user.Password != request.Password)
     {
-      return Errors.Authentication.InvalidCredentials;
+      return new[] { Errors.Authentication.InvalidCredentials };
     }
 
     // 3. Create JWT
