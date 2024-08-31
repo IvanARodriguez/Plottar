@@ -1,18 +1,26 @@
 namespace Plottar.Api.Errors;
 
 using ErrorOr;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 public static class ErrorHandling
 {
   public static IResult GenerateProblemDetails(HttpContext ctx, List<Error> errors)
   {
+    if (errors.Count == 0)
+    {
+      return Results.Problem();
+    }
 
     ctx.Items["errors"] = errors;
 
     var firstError = errors[0];
 
-    var statusCode = firstError.Type switch
+    return Problem(firstError);
+  }
+
+  private static IResult Problem(Error error)
+  {
+    var statusCode = error.Type switch
     {
       ErrorType.Conflict => StatusCodes.Status409Conflict,
       ErrorType.Validation => StatusCodes.Status400BadRequest,
@@ -24,6 +32,6 @@ public static class ErrorHandling
       _ => StatusCodes.Status500InternalServerError
     };
 
-    return Results.Problem(detail: firstError.Description, statusCode: statusCode);
+    return Results.Problem(detail: error.Description, statusCode: statusCode);
   }
 }

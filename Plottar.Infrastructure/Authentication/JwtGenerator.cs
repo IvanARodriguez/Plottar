@@ -1,7 +1,6 @@
 namespace Plottar.Infrastructure.Authentication;
 
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -11,17 +10,15 @@ using Microsoft.Extensions.Options;
 using Plottar.Domain;
 
 public class JwtGenerator(
-          IConfiguration configuration,
           IDateTimeProvider dateTimeProvider,
           IOptions<JwtSettings> jwtOptions) : IJwtGenerator
 {
-  private readonly IConfiguration config = configuration;
   private readonly IDateTimeProvider dateProvider = dateTimeProvider;
   private readonly JwtSettings jwtSettings = jwtOptions.Value;
 
   public string GenerateToken(User user)
   {
-    var secret = this.config["JWT_SECRET"] ?? throw new NotImplementedException("No jwt secret found");
+    var secret = this.jwtSettings.Secret ?? throw new NotImplementedException("No jwt secret found");
 
     var signingCreds = new SigningCredentials(
       new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),

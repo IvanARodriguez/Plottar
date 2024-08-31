@@ -2,7 +2,6 @@ namespace Plottar.Api.HttpHandler;
 
 using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plottar.Api.Errors;
 using Plottar.Application.Commands.Register;
 using Plottar.Application.Queries.Login;
@@ -12,7 +11,9 @@ public static class AuthenticationHandler
 {
   public static void MapAuthRoutes(this IEndpointRouteBuilder endpoints)
   {
-    endpoints.MapPost("/auth/register", async (
+    var authRoutesGroup = endpoints.MapGroup("/auth");
+
+    authRoutesGroup.MapPost("/register", async (
       HttpContext ctx,
       RegisterRequest req,
       ISender mediator,
@@ -27,7 +28,7 @@ public static class AuthenticationHandler
        );
      });
 
-    endpoints.MapPost("/auth/login", async (
+    authRoutesGroup.MapPost("/login", async (
       HttpContext ctx,
       LoginRequest req,
       ISender mediator,

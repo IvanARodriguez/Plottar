@@ -6,6 +6,7 @@ using Plottar.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 {
   builder.Configuration.AddUserSecrets<Program>();
+
   builder.Services
     .AddPresentation()
     .AddApplication()
@@ -15,8 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+  // Exception Handling
   app.UseExceptionHandler("/error");
-  app.UseHttpsRedirection();
+  app.UsePathBase("/api");
   app.MapAuthRoutes();
+  app.MapJobsRoutes();
   app.Run();
 }

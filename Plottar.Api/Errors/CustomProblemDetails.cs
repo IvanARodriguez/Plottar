@@ -11,9 +11,11 @@ public static class CustomProblemDetails
     var errors = context.HttpContext.Items["errors"] as List<Error>;
     if (errors is not null && errors.Count != 0)
     {
-      context.ProblemDetails.Extensions.Add(
-        "errorsCode",
-        errors.Select(e => $"{e.Code}: {e.Description}"));
+      var errorDictionary = errors.ToDictionary(
+                    e => e.Code,
+                    e => e.Description
+                );
+      context.ProblemDetails.Extensions.Add("errorsCode", errorDictionary);
     }
     context.ProblemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString());
   }
