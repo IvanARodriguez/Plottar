@@ -10,10 +10,10 @@ public class Job
   public Guid Id { get; set; }
 
   [Required, MaxLength(100)]
-  public required string Title { get; set; } = null!;
+  public string Title { get; set; } = null!;
 
   [Required]
-  public required string Description { get; set; }
+  public string Description { get; set; } = string.Empty;
 
   [MaxLength(255)]
   public string ShortDescription { get; set; } = string.Empty;
@@ -21,23 +21,32 @@ public class Job
   [MaxLength(100)]
   public string CompanyName { get; set; } = string.Empty;
 
-  public DateOnly CreateDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
-  public DateOnly UpdateDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+  public DateTime CreateDate { get; set; } = DateTime.Now;
+  public DateTime UpdateDate { get; set; } = DateTime.Now;
 
   [Column(TypeName = "decimal(18,2)")]
   public decimal Salary { get; set; }
 
   [Required]
-  public required string SalaryType { get; set; } = "Annual"; // Consider Enum
+  public SalaryType SalaryType { get; set; } = SalaryType.Year;
 
   [Required, MaxLength(3)]
-  public string CurrencyCode { get; set; } = "USD"; // Consider Enum or constrained list
-
-  public Guid? UserId { get; set; } // Nullable if anonymous
-
-  [MaxLength(100)]
-  public string AnonymousUserName { get; set; } = string.Empty; // Optional
+  public string CurrencyCode { get; set; } = "USD";
 
   [Required]
-  public required JobStatus Status { get; set; } = JobStatus.Active; // Consider Enum
+  public JobUserType JobUserType { get; set; } = JobUserType.RegisteredUser;
+
+  public Guid? UserId { get; set; }
+
+  [MaxLength(100)]
+  public string? AnonymousUserName { get; set; }
+
+  [Required]
+  public JobStatus Status { get; set; } = JobStatus.Active;
+
+  [Required]
+  public Guid JobCategoryId { get; set; } // Foreign Key to JobCategory
+  public JobCategory Category { get; set; } = null!; // Navigation Property
+
+  public List<Skill> Skills { get; set; } = [];
 }

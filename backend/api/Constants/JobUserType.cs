@@ -1,8 +1,7 @@
-namespace Api.Constants
+namespace Api.Constants;
+
+public enum JobUserType
 {
-  public enum JobUserType
-  {
-    RegisteredUser,
-    AnonymousUser
-  }
+  RegisteredUser,
+  AnonymousUser
 }
