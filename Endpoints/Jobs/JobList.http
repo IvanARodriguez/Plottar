@@ -1,6 +1,0 @@
-@port = 9000
-@api_url = http://localhost:{{port}}/api
-
-GET {{api_url}}/jobs
-
-###

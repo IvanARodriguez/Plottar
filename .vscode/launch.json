@@ -8,7 +8,7 @@
       "name": ".Net Core Launch (web)",
       "type": "dotnet",
       "request": "launch",
-      "projectPath": "${workspaceFolder}/Plottar.Api/Plottar.Api.csproj"
+      "projectPath": "${workspaceFolder}/backend/api/api.csproj"
     }
   ]
 }
