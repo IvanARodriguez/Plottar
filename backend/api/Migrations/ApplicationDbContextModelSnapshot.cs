@@ -84,7 +84,7 @@ namespace api.Migrations
 
                     b.HasIndex("JobCategoryId");
 
-                    b.ToTable("Job");
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("Api.Models.JobCategory", b =>
@@ -103,7 +103,7 @@ namespace api.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("JobCategory");
+                    b.ToTable("JobCategories");
                 });
 
             modelBuilder.Entity("Api.Models.Skill", b =>
@@ -121,7 +121,7 @@ namespace api.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Skill");
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("JobSkill", b =>

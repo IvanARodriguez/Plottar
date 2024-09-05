@@ -3,9 +3,12 @@
     "ASPNETCORE",
     "Blazor",
     "dotnet",
+    "Dtos",
     "Hmac",
     "Mapster",
     "Mediat",
+    "Npgsql",
+    "plottar",
     "Plottar"
   ],
   "[csharp]": {
