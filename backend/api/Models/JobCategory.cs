@@ -13,6 +13,5 @@ public class JobCategory
   [Required, MinLength(3), MaxLength(50)]
   public string Name { get; set; } = null!;
 
-  // Navigation Property for One-to-Many Relationship with Jobs
   public List<Job> Jobs { get; set; } = [];
 }

@@ -1,0 +1,29 @@
+@api_HostAddress = http://localhost:5123
+
+GET {{api_HostAddress}}/api/job
+Accept: application/json
+
+###
+GET {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
+Accept: application/json
+
+###
+POST  {{api_HostAddress}}/api/job
+Content-Type: application/json
+
+{
+  "title": "Senior React Developer",
+  "description": "Work with engineers and develop great solutions",
+  "shortDescription": "Test This Job",
+  "companyName": "Microsoft",
+  "salary": 136000,
+  "currencyCode": "USD",
+  "userId": null,
+  "anonymousUserName": "Ivan Rodriguez",
+  "jobCategoryId": "82dc0028-2e9c-490d-bf4d-94ac83a91685",
+  "skills": [],
+  "salaryType": "Year",
+  "jobUserType": "AnonymousUser",
+  "status": "Active"
+}
+###

@@ -21,8 +21,8 @@ public class Job
   [MaxLength(100)]
   public string CompanyName { get; set; } = string.Empty;
 
-  public DateTime CreateDate { get; set; } = DateTime.Now;
-  public DateTime UpdateDate { get; set; } = DateTime.Now;
+  public DateTime CreateDate { get; set; } = DateTime.UtcNow;
+  public DateTime UpdateDate { get; set; } = DateTime.UtcNow;
 
   [Column(TypeName = "decimal(18,2)")]
   public decimal Salary { get; set; }
@@ -45,8 +45,9 @@ public class Job
   public JobStatus Status { get; set; } = JobStatus.Active;
 
   [Required]
-  public Guid JobCategoryId { get; set; } // Foreign Key to JobCategory
-  public JobCategory Category { get; set; } = null!; // Navigation Property
+  public Guid JobCategoryId { get; set; }
+
+  public JobCategory? Category { get; set; }
 
   public List<Skill> Skills { get; set; } = [];
 }

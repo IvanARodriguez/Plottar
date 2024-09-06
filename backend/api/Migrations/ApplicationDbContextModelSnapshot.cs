@@ -52,6 +52,9 @@ namespace api.Migrations
                     b.Property<Guid>("JobCategoryId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("JobCategoryId1")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("JobUserType")
                         .HasColumnType("integer");
 
@@ -83,6 +86,8 @@ namespace api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("JobCategoryId");
+
+                    b.HasIndex("JobCategoryId1");
 
                     b.ToTable("Jobs");
                 });
@@ -142,10 +147,14 @@ namespace api.Migrations
             modelBuilder.Entity("Api.Models.Job", b =>
                 {
                     b.HasOne("Api.Models.JobCategory", "Category")
-                        .WithMany("Jobs")
+                        .WithMany()
                         .HasForeignKey("JobCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
+
+                    b.HasOne("Api.Models.JobCategory", null)
+                        .WithMany("Jobs")
+                        .HasForeignKey("JobCategoryId1");
 
                     b.Navigation("Category");
                 });

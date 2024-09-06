@@ -8,4 +8,13 @@ public class ApplicationDbContext(DbContextOptions dbContextOptions) : DbContext
   public DbSet<Job> Jobs { get; set; }
   public DbSet<JobCategory> JobCategories { get; set; }
   public DbSet<Skill> Skills { get; set; }
+
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+    modelBuilder.Entity<Job>()
+        .HasOne(j => j.Category)
+        .WithMany(c => c.Jobs)
+        .HasForeignKey(j => j.JobCategoryId)
+        .IsRequired();
+  }
 }

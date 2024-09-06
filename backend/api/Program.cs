@@ -1,13 +1,13 @@
 using Api.Data;
-using Api.Dtos;
 using Api.HttpHandlers;
-using Api.Repository.Common;
 using Microsoft.EntityFrameworkCore;
+using Api.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped(typeof(IRepository<JobDto>), typeof(Api.Repository.JobRepository));
+builder.Services.AddScoped(typeof(IJobRepository), typeof(JobRepository));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
   options.UseNpgsql(
     builder.Configuration.GetConnectionString("DefaultConnection")
