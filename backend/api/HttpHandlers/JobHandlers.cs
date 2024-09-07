@@ -4,6 +4,7 @@ namespace Api.HttpHandlers;
 using Api.Constants;
 using Api.Models.Dtos.Job;
 using Api.Repository;
+using Microsoft.Extensions.Options;
 
 public static class JobHandlers
 {
@@ -22,61 +23,60 @@ public static class JobHandlers
       var jobs = await jobRepository.GetAllJobsAsync();
       return Results.Ok(jobs);
     }
+
     static async Task<IResult> CreateJobAsync(
      IJobRepository jobRepository,
      CreateJobDto createJobDto
    )
     {
       const int invalidEntityError = StatusCodes.Status422UnprocessableEntity;
+
       if (!Enum.TryParse<JobUserType>(createJobDto.JobUserType, false, out _))
         return Results.Problem("Invalid user type", statusCode: invalidEntityError);
 
       if (!Enum.TryParse<SalaryType>(createJobDto.SalaryType, false, out _))
         return Results.Problem("Invalid job status", statusCode: invalidEntityError);
 
-      var job = await jobRepository.AddAsync(createJobDto);
+      var options = await jobRepository.AddAsync(createJobDto);
 
-      if (job is null)
-        return Results.Problem("Job not created", statusCode: StatusCodes.Status409Conflict);
-
-      return Results.Ok(job);
+      return options.MatchFirst(
+        job => Results.Ok(job),
+        err => Results.Problem(err.Description, statusCode: StatusCodes.Status409Conflict)
+      );
     }
 
     static async Task<IResult> GetJobByIdAsync(Guid id, IJobRepository jobRepository)
     {
-      var job = await jobRepository.GetByIdAsync(id);
-      if (job is null)
-      {
-        var message = "The job was not found";
-        short code = StatusCodes.Status404NotFound;
-        return Results.Problem(message, statusCode: code);
-      }
-      return Results.Ok(job);
-    }
+      var options = await jobRepository.GetByIdAsync(id);
 
+      return options.MatchFirst(
+        job => Results.Ok(job),
+        err => Results.Problem(err.Description, statusCode: StatusCodes.Status404NotFound)
+      );
+
+    }
 
     static async Task<IResult> UpdateJobAsync(
      Guid id,
      IJobRepository jobRepository,
      UpdateJobRequestDto updateDto)
     {
-      var job = await jobRepository.UpdateAsync(id, updateDto);
+      var options = await jobRepository.UpdateAsync(id, updateDto);
 
-      if (job is null)
-      {
-        var message = "The job was not found";
-        short code = StatusCodes.Status404NotFound;
-        return Results.Problem(message, statusCode: code);
-      }
-
-      return Results.Ok(job);
+      return options.MatchFirst(
+       job => Results.Ok(job),
+       err => Results.Problem(err.Description, statusCode: StatusCodes.Status404NotFound)
+     );
     }
     static async Task<IResult> DeleteJobAsync(
      Guid id,
      IJobRepository jobRepository)
     {
-      await jobRepository.DeleteAsync(id);
-      return Results.Ok();
+      var options = await jobRepository.DeleteAsync(id);
+      return options.MatchFirst(
+       count => Results.NoContent(),
+       err => Results.Problem(err.Description, statusCode: StatusCodes.Status409Conflict)
+     );
     }
   }
 

@@ -1,14 +1,18 @@
 @api_HostAddress = http://localhost:5123
 
+# Jobs
 GET {{api_HostAddress}}/api/job
 ###
 
+# Job By ID
 GET {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
 ###
 
+# Delete Job
 DELETE  {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
 ###
 
+# Create a Job
 POST  {{api_HostAddress}}/api/job
 Content-Type: application/json
 
@@ -27,11 +31,13 @@ Content-Type: application/json
   "jobUserType": "AnonymousUser"
 }
 ###
+
+# Update a Job
 PUT  {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
 Content-Type: application/json
 
 {
-  "title": "Senior React Developer 3",
+  "title": "Senior Accountantr",
   "description": "Work with engineers and develop great solutions and Ivan",
   "shortDescription": "Test This Job",
   "companyName": "Microsoft",

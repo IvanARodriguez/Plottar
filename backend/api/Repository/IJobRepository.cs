@@ -1,12 +1,13 @@
 namespace Api.Repository;
 
 using Api.Models.Dtos.Job;
+using ErrorOr;
 
 public interface IJobRepository
 {
   Task<IEnumerable<JobDto>> GetAllJobsAsync();
-  Task<JobDto?> GetByIdAsync(Guid id);
-  Task<JobDto> AddAsync(CreateJobDto entity);
-  Task<JobDto> UpdateAsync(Guid id, UpdateJobRequestDto entity);
-  Task DeleteAsync(Guid id);
+  Task<ErrorOr<JobDto?>> GetByIdAsync(Guid id);
+  Task<ErrorOr<JobDto>> AddAsync(CreateJobDto entity);
+  Task<ErrorOr<JobDto>> UpdateAsync(Guid id, UpdateJobRequestDto entity);
+  Task<ErrorOr<int>> DeleteAsync(Guid id);
 }
