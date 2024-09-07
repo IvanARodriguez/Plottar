@@ -1,19 +1,38 @@
 @api_HostAddress = http://localhost:5123
 
 GET {{api_HostAddress}}/api/job
-Accept: application/json
-
 ###
+
 GET {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
-Accept: application/json
-
 ###
+
+DELETE  {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
+###
+
 POST  {{api_HostAddress}}/api/job
 Content-Type: application/json
 
 {
   "title": "Senior React Developer",
-  "description": "Work with engineers and develop great solutions",
+  "description": "Test description",
+  "shortDescription": "Test short description",
+  "companyName": "Tesla",
+  "salary": 105000,
+  "currencyCode": "USD",
+  "userId": null,
+  "anonymousUserName": "Abiel Rodriguez",
+  "jobCategoryId": "82dc0028-2e9c-490d-bf4d-94ac83a91685",
+  "skills": [],
+  "salaryType": "Year",
+  "jobUserType": "AnonymousUser"
+}
+###
+PUT  {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
+Content-Type: application/json
+
+{
+  "title": "Senior React Developer 3",
+  "description": "Work with engineers and develop great solutions and Ivan",
   "shortDescription": "Test This Job",
   "companyName": "Microsoft",
   "salary": 136000,

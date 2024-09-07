@@ -21,5 +21,9 @@ public class MappingProfile : Profile
     this.CreateMap<CreateJobDto, Job>()
         .ForMember(dest => dest.Category, opt => opt.Ignore())
         .ForMember(dest => dest.Skills, opt => opt.Ignore());
+
+    this.CreateMap<UpdateJobRequestDto, Job>()
+        .ForMember(dest => dest.Category, opt => opt.Ignore())
+        .ForMember(dest => dest.Skills, opt => opt.Ignore());
   }
 }

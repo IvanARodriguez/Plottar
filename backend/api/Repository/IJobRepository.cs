@@ -7,6 +7,6 @@ public interface IJobRepository
   Task<IEnumerable<JobDto>> GetAllJobsAsync();
   Task<JobDto?> GetByIdAsync(Guid id);
   Task<JobDto> AddAsync(CreateJobDto entity);
-  Task<JobDto> UpdateAsync(JobDto entity);
+  Task<JobDto> UpdateAsync(Guid id, UpdateJobRequestDto entity);
   Task DeleteAsync(Guid id);
 }

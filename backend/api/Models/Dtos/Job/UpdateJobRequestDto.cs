@@ -1,6 +1,7 @@
+
 namespace Api.Models.Dtos.Job;
 
-public class CreateJobDto
+public class UpdateJobRequestDto
 {
   public string Title { get; set; } = null!;
   public string Description { get; set; } = null!;
@@ -14,5 +15,5 @@ public class CreateJobDto
   public List<string> Skills { get; set; } = [];
   public string SalaryType { get; set; } = null!;
   public string JobUserType { get; set; } = null!;
-  public string? Status { get; set; }
+  public string Status { get; set; } = null!;
 }

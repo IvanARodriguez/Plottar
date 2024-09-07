@@ -2,10 +2,13 @@ using Api.Data;
 using Api.HttpHandlers;
 using Microsoft.EntityFrameworkCore;
 using Api.Repository;
+using Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddProblemDetails();
+
+builder.Services.AddCustomProblemDetails();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped(typeof(IJobRepository), typeof(JobRepository));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -15,7 +18,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 var app = builder.Build();
+
 app.MapGet("/test", () => "Test working");
-app.MapJobEndpoints();
-app.UseHttpsRedirection();
+
+app.UseExceptionHandler("/api/error");
+app.MapApiRoutes();
+
 app.Run();

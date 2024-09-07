@@ -53,14 +53,28 @@ public class JobRepository(ApplicationDbContext ctx, IMapper map) : IJobReposito
     return job == null ? null : this.mapper.Map<JobDto>(job);
   }
 
-  public Task<JobDto> UpdateAsync(JobDto entity)
+  public async Task<JobDto> UpdateAsync(Guid id, UpdateJobRequestDto entity)
   {
-    throw new NotImplementedException();
+    var job = await this.context.Jobs.Where(j => j.Id == id).FirstOrDefaultAsync(j => j.Id == id) ?? throw new KeyNotFoundException("Job not found");
+
+    this.mapper.Map(entity, job);
+
+    await this.context.SaveChangesAsync();
+
+    return this.mapper.Map<JobDto>(job);
+    ;
   }
 
-  public Task DeleteAsync(Guid id)
+  public async Task DeleteAsync(Guid id)
   {
-    throw new NotImplementedException();
+    var job = await this.context.Jobs.FirstOrDefaultAsync(j => j.Id == id) ?? throw new KeyNotFoundException("Job not found");
+
+    var deletedCount = await this.context.Jobs.Where(job => job.Id == id).ExecuteDeleteAsync();
+
+    if (deletedCount == 0)
+      throw new KeyNotFoundException("Job not found");
+
+    return;
   }
 
 }
