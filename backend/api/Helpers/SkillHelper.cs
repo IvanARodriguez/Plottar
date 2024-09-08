@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 public class SkillHelper(ApplicationDbContext ctx)
 {
-  private readonly ApplicationDbContext context = ctx;
+  private readonly ApplicationDbContext _context = ctx;
   public async Task<List<Skill>> GetOrCreateSkillsAsync(IEnumerable<string> skillNames)
   {
-    var existingSkills = await this.context.Skills
+    var existingSkills = await _context.Skills
           .Where(s => skillNames.Contains(s.Name))
           .ToListAsync();
 
@@ -20,8 +20,8 @@ public class SkillHelper(ApplicationDbContext ctx)
     if (newSkillNames.Count != 0)
     {
       var newSkills = newSkillNames.Select(name => new Skill { Name = name }).ToList();
-      await this.context.Skills.AddRangeAsync(newSkills);
-      await this.context.SaveChangesAsync();
+      await _context.Skills.AddRangeAsync(newSkills);
+      await _context.SaveChangesAsync();
       existingSkills.AddRange(newSkills);
     }
 

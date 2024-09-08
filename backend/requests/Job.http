@@ -5,11 +5,11 @@ GET {{api_HostAddress}}/api/jobs
 ###
 
 # Job By ID
-GET {{api_HostAddress}}/api/jobs/d0c91c72-8193-4cfd-b9be-d4068c65baed
+GET {{api_HostAddress}}/api/jobs/7073c80c-d2d4-4d68-8b1f-26a95d77d132
 ###
 
 # Delete Job
-DELETE  {{api_HostAddress}}/api/jobs/d0c91c72-8193-4cfd-b9be-d4068c65baed
+DELETE  {{api_HostAddress}}/api/jobs/e533b09f-0000-429f-8c59-848fe33e0e8b
 ###
 
 # Create a Job
@@ -33,11 +33,11 @@ Content-Type: application/json
 ###
 
 # Update a Job
-PUT  {{api_HostAddress}}/api/jobs/117875b5-7fa8-4eed-aa36-2bc722af2cf9
+PUT  {{api_HostAddress}}/api/jobs/f763ecb6-4d1d-4ac1-bab0-ba33b785041a
 Content-Type: application/json
 
 {
-  "title": "Senior Accountantr 3",
+  "title": "Senior Accountant 3",
   "description": "Work with engineers and develop great solutions and Ivan",
   "shortDescription": "Test This Job",
   "companyName": "Microsoft",
@@ -48,6 +48,6 @@ Content-Type: application/json
   "jobCategoryId": "82dc0028-2e9c-490d-bf4d-94ac83a91685",
   "salaryType": "Year",
   "jobUserType": "AnonymousUser",
-  "skills": ["css"]
+  "skills": ["excel"]
 }
 ###

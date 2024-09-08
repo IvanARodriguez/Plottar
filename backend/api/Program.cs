@@ -7,18 +7,12 @@ using Api;
 var builder = WebApplication.CreateBuilder(args);
 {
   builder.Services
-  .AppPresentation()
-  .AddEndpointsApiExplorer()
-  .AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(
-      builder.Configuration.GetConnectionString("DefaultConnection")
-  )
-);
+  .AppPresentation(builder.Configuration);
 }
 
 var app = builder.Build();
 {
-  app.UseExceptionHandler("/api/error");
+  app.UseExceptionHandler();
   app.MapApiRoutes();
   app.Run();
 }

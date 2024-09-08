@@ -20,7 +20,7 @@ public static class CustomProblemDetails
 
     context.ProblemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString());
 
-    context.ProblemDetails.Extensions.Remove("exception");
+
   }
 
 }

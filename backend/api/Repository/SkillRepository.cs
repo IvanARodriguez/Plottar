@@ -12,11 +12,11 @@ using Microsoft.EntityFrameworkCore;
 
 public class SkillRepository(ApplicationDbContext ctx, IMapper map) : ISkillRepository
 {
-  private readonly ApplicationDbContext context = ctx;
-  private readonly IMapper mapper = map;
+  private readonly ApplicationDbContext _context = ctx;
+  private readonly IMapper _mapper = map;
   public async Task<ErrorOr<SkillDto>> CreateSkillAsync(CreateSkillDto createSkillDto)
   {
-    var skill = this.mapper.Map<Skill>(createSkillDto);
+    var skill = _mapper.Map<Skill>(createSkillDto);
 
     if (skill is null)
       return Error.Conflict("Could not map skill");
@@ -24,16 +24,16 @@ public class SkillRepository(ApplicationDbContext ctx, IMapper map) : ISkillRepo
     // ALL skills must be saved in lowercase
     skill.Name = skill.Name.ToLower(System.Globalization.CultureInfo.CurrentCulture);
 
-    var existingSkill = await this.context.Skills
+    var existingSkill = await _context.Skills
       .FirstOrDefaultAsync(x => x.Name == skill.Name);
 
     if (existingSkill is not null)
       return Error.Conflict("This skill already exists");
 
-    await this.context.Skills.AddAsync(skill);
-    await this.context.SaveChangesAsync();
+    await _context.Skills.AddAsync(skill);
+    await _context.SaveChangesAsync();
 
-    return this.mapper.Map<SkillDto>(skill);
+    return _mapper.Map<SkillDto>(skill);
   }
 
   public Task<ErrorOr<SkillDto>> DeleteSkillAsync(Guid id)
@@ -48,9 +48,9 @@ public class SkillRepository(ApplicationDbContext ctx, IMapper map) : ISkillRepo
 
   public async Task<IEnumerable<SkillDto>> GetSkillsAsync()
   {
-    var skills = await this.context.Skills.ToListAsync() ?? [];
+    var skills = await _context.Skills.ToListAsync() ?? [];
 
-    return this.mapper.Map<IEnumerable<SkillDto>>(skills);
+    return _mapper.Map<IEnumerable<SkillDto>>(skills);
   }
 
   public Task<ErrorOr<SkillDto>> UpdateSkillAsync(Guid id, SkillDto skillDto)
