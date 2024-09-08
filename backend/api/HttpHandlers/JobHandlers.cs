@@ -2,31 +2,31 @@
 namespace Api.HttpHandlers;
 
 using Api.Constants;
+using Api.Interfaces;
 using Api.Models.Dtos.Job;
-using Api.Repository;
-using Microsoft.Extensions.Options;
 
 public static class JobHandlers
 {
   public static void MapJobEndpoints(this WebApplication app)
   {
-    var endpoints = app.MapGroup("/job");
+    var endpoints = app.MapGroup("/jobs");
 
-    endpoints.MapGet("/", GetAllJobsAsync);
+    endpoints.MapGet("/", GetJobsAsync);
     endpoints.MapPost("/", CreateJobAsync);
     endpoints.MapGet("/{id:guid}", GetJobByIdAsync);
     endpoints.MapPut("/{id:guid}", UpdateJobAsync);
     endpoints.MapDelete("/{id:guid}", DeleteJobAsync);
 
-    static async Task<IResult> GetAllJobsAsync(IJobRepository jobRepository)
+    static async Task<IResult> GetJobsAsync(IJobRepository jobRepository)
     {
       var jobs = await jobRepository.GetAllJobsAsync();
       return Results.Ok(jobs);
     }
 
     static async Task<IResult> CreateJobAsync(
-     IJobRepository jobRepository,
-     CreateJobDto createJobDto
+      HttpContext ctx,
+      IJobRepository jobRepository,
+      CreateJobDto createJobDto
    )
     {
       const int invalidEntityError = StatusCodes.Status422UnprocessableEntity;
@@ -39,9 +39,9 @@ public static class JobHandlers
 
       var options = await jobRepository.AddAsync(createJobDto);
 
-      return options.MatchFirst(
+      return options.Match(
         job => Results.Ok(job),
-        err => Results.Problem(err.Description, statusCode: StatusCodes.Status409Conflict)
+        errors => ErrorHandlers.GenerateProblemDetails(ctx, errors)
       );
     }
 
@@ -57,16 +57,17 @@ public static class JobHandlers
     }
 
     static async Task<IResult> UpdateJobAsync(
-     Guid id,
-     IJobRepository jobRepository,
-     UpdateJobRequestDto updateDto)
+      Guid id,
+      HttpContext ctx,
+      IJobRepository jobRepository,
+      UpdateJobRequestDto updateDto)
     {
       var options = await jobRepository.UpdateAsync(id, updateDto);
 
-      return options.MatchFirst(
-       job => Results.Ok(job),
-       err => Results.Problem(err.Description, statusCode: StatusCodes.Status404NotFound)
-     );
+      return options.Match(
+        job => Results.Ok(job),
+        errors => ErrorHandlers.GenerateProblemDetails(ctx, errors)
+      );
     }
     static async Task<IResult> DeleteJobAsync(
      Guid id,

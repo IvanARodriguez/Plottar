@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Api.Constants;
+using Api.Models.Relationship;
 
 public class Job
 {
@@ -49,5 +50,5 @@ public class Job
 
   public JobCategory? Category { get; set; }
 
-  public List<Skill> Skills { get; set; } = [];
+  public List<JobSkill> JobSkills { get; set; } = [];
 }

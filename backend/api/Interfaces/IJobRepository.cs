@@ -1,4 +1,4 @@
-namespace Api.Repository;
+namespace Api.Interfaces;
 
 using Api.Models.Dtos.Job;
 using ErrorOr;

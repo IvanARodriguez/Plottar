@@ -6,6 +6,7 @@ public static class Routes
   {
     app.UsePathBase("/api");
     app.MapJobEndpoints();
-    app.MapErrorEndpoints();
+    app.MapSkillsEndpoints();
+    app.MapGet("/error", (HttpContext ctx) => ErrorHandlers.GenerateProblemDetails(ctx, null));
   }
 }

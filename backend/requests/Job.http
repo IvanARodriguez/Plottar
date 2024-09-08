@@ -1,43 +1,43 @@
 @api_HostAddress = http://localhost:5123
 
 # Jobs
-GET {{api_HostAddress}}/api/job
+GET {{api_HostAddress}}/api/jobs
 ###
 
 # Job By ID
-GET {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
+GET {{api_HostAddress}}/api/jobs/d0c91c72-8193-4cfd-b9be-d4068c65baed
 ###
 
 # Delete Job
-DELETE  {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
+DELETE  {{api_HostAddress}}/api/jobs/d0c91c72-8193-4cfd-b9be-d4068c65baed
 ###
 
 # Create a Job
-POST  {{api_HostAddress}}/api/job
+POST  {{api_HostAddress}}/api/jobs
 Content-Type: application/json
 
 {
-  "title": "Senior React Developer",
+  "title": "Junior Software Engineer 1",
   "description": "Test description",
   "shortDescription": "Test short description",
   "companyName": "Tesla",
-  "salary": 105000,
+  "salary": 75000,
   "currencyCode": "USD",
   "userId": null,
   "anonymousUserName": "Abiel Rodriguez",
   "jobCategoryId": "82dc0028-2e9c-490d-bf4d-94ac83a91685",
-  "skills": [],
+  "skills": ["javascript", "html"],
   "salaryType": "Year",
   "jobUserType": "AnonymousUser"
 }
 ###
 
 # Update a Job
-PUT  {{api_HostAddress}}/api/job/d0c91c72-8193-4cfd-b9be-d4068c65baed
+PUT  {{api_HostAddress}}/api/jobs/117875b5-7fa8-4eed-aa36-2bc722af2cf9
 Content-Type: application/json
 
 {
-  "title": "Senior Accountantr",
+  "title": "Senior Accountantr 3",
   "description": "Work with engineers and develop great solutions and Ivan",
   "shortDescription": "Test This Job",
   "companyName": "Microsoft",
@@ -46,9 +46,8 @@ Content-Type: application/json
   "userId": null,
   "anonymousUserName": "Ivan Rodriguez",
   "jobCategoryId": "82dc0028-2e9c-490d-bf4d-94ac83a91685",
-  "skills": [],
   "salaryType": "Year",
   "jobUserType": "AnonymousUser",
-  "status": "Active"
+  "skills": ["css"]
 }
 ###
