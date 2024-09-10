@@ -5,11 +5,7 @@ GET {{api_HostAddress}}/api/skills
 ###
 
 # Skill By ID
-GET {{api_HostAddress}}/api/skills/d0c91c72-8193-4cfd-b9be-d4068c65baed
-###
-
-# Delete Skill
-DELETE  {{api_HostAddress}}/api/skills/d0c91c72-8193-4cfd-b9be-d4068c65baed
+GET {{api_HostAddress}}/api/skills/0d9091bd-6ec9-4efa-b261-f378912ad440
 ###
 
 # Create a Skill
@@ -17,15 +13,6 @@ POST  {{api_HostAddress}}/api/skills
 Content-Type: application/json
 
 {
- "name": "Css"
-}
-###
-
-# Update a SKill
-PUT  {{api_HostAddress}}/api/skills/d0c91c72-8193-4cfd-b9be-d4068c65baed
-Content-Type: application/json
-
-{
-  "name": "Javascript"
+ "name": "Bootstrap"
 }
 ###

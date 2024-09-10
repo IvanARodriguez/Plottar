@@ -38,16 +38,16 @@ Content-Type: application/json
 
 {
   "title": "Senior Accountant 3",
-  "description": "Work with engineers and develop great solutions and Ivan",
-  "shortDescription": "Test This Job",
-  "companyName": "Microsoft",
-  "salary": 136000,
+  "description": "Test description",
+  "shortDescription": "Test short description",
+  "companyName": "Tesla",
+  "salary": 75000,
   "currencyCode": "USD",
   "userId": null,
-  "anonymousUserName": "Ivan Rodriguez",
+  "anonymousUserName": "Abiel Rodriguez",
   "jobCategoryId": "82dc0028-2e9c-490d-bf4d-94ac83a91685",
+  "skills": ["javascript", "seo", "Ef Core"],
   "salaryType": "Year",
-  "jobUserType": "AnonymousUser",
-  "skills": ["excel"]
+  "jobUserType": "AnonymousUser"
 }
 ###

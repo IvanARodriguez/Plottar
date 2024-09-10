@@ -17,7 +17,7 @@ public class SkillHelper(ApplicationDbContext ctx)
       .Except(existingSkills.Select(s => s.Name))
       .ToList();
 
-    if (newSkillNames.Count != 0)
+    if (newSkillNames.Count > 0)
     {
       var newSkills = newSkillNames.Select(name => new Skill { Name = name }).ToList();
       await _context.Skills.AddRangeAsync(newSkills);

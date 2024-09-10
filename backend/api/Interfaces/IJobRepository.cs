@@ -10,4 +10,5 @@ public interface IJobRepository
   Task<ErrorOr<JobDto>> AddAsync(CreateJobDto entity);
   Task<ErrorOr<JobDto>> UpdateAsync(Guid id, UpdateJobRequestDto entity);
   Task<ErrorOr<int>> DeleteAsync(Guid id);
+  Task<ErrorOr<int>> DeleteJobSkillAsync(Guid id, string skillName);
 }

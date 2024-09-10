@@ -18,6 +18,7 @@ public static class DependencyInjection
       .AddExceptionHandler<ExceptionsToProblemDetailsHandler>()
       .AddAutoMapper(typeof(Program))
       .AddScoped(typeof(SkillHelper))
+      .AddScoped(typeof(JobSkillHelper))
       .AddScoped(typeof(IJobRepository), typeof(JobRepository))
       .AddScoped(typeof(ISkillRepository), typeof(SkillRepository))
       .AddDbContext<ApplicationDbContext>(options =>

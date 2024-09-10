@@ -13,18 +13,19 @@ using AutoMapper;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
-public class JobRepository(ApplicationDbContext ctx, IMapper map, SkillHelper skillHelper) : IJobRepository
+public class JobRepository(ApplicationDbContext ctx, IMapper map, SkillHelper skillHelper, JobSkillHelper jobSkillHelper) : IJobRepository
 {
   private readonly ApplicationDbContext _context = ctx;
   private readonly IMapper _mapper = map;
   private readonly SkillHelper _skillHelper = skillHelper;
+  private readonly JobSkillHelper _jobSkillHelper = jobSkillHelper;
 
   public async Task<ErrorOr<JobDto>> AddAsync(CreateJobDto entity)
   {
     var job = _mapper.Map<Job>(entity);
 
     if (job is null)
-      return Error.Conflict("The job could not be map to the request job");
+      return Error.Conflict("The job could not be mapped to the request job");
 
     job.Category = null;
 
@@ -70,24 +71,27 @@ public class JobRepository(ApplicationDbContext ctx, IMapper map, SkillHelper sk
 
   public async Task<ErrorOr<JobDto>> UpdateAsync(Guid id, UpdateJobRequestDto entity)
   {
-    var job = await _context.Jobs.Where(j => j.Id == id).FirstOrDefaultAsync(j => j.Id == id);
+    var job = await _context.Jobs
+        .Include(j => j.JobSkills)
+        .ThenInclude(js => js.Skill)
+        .FirstOrDefaultAsync(j => j.Id == id);
 
     if (job is null)
       return Error.NotFound(description: "The job could not be found");
-
-    var allSkills = await _skillHelper
-      .GetOrCreateSkillsAsync(entity.Skills);
-
-    job.JobSkills = allSkills
-      .Select(s => new JobSkill { JobId = job.Id, SkillId = s.Id })
-      .ToList();
-
     _mapper.Map(entity, job);
 
     await _context.SaveChangesAsync();
 
+    if (entity.Skills != null && entity.Skills.Count != 0)
+    {
+      var allSkills = await _skillHelper.GetOrCreateSkillsAsync(entity.Skills);
+
+      if (allSkills.Count > 0)
+      {
+        await _jobSkillHelper.UpdateJobSkillsAsync(job, allSkills);
+      }
+    }
     return _mapper.Map<JobDto>(job);
-    ;
   }
 
   public async Task<ErrorOr<int>> DeleteAsync(Guid id)
@@ -98,6 +102,28 @@ public class JobRepository(ApplicationDbContext ctx, IMapper map, SkillHelper sk
 
     if (deletedCount == 0)
       return Error.NotFound(description: "No Job was deleted");
+
+    return deletedCount;
+  }
+
+  public async Task<ErrorOr<int>> DeleteJobSkillAsync(Guid id, string skillName)
+  {
+    var skillToDelete = await _context.Skills
+        .Where(s => s.Name == skillName)
+        .Select(s => s.Id)
+        .SingleOrDefaultAsync();
+
+    if (skillToDelete == Guid.Empty)
+    {
+      return Error.NotFound(description: $"{skillName} could not be deleted for this job");
+    }
+
+    var deletedCount = await _context.JobSkill
+        .Where(js => js.JobId == id && js.SkillId == skillToDelete)
+        .ExecuteDeleteAsync();
+
+    if (deletedCount == 0)
+      return Error.NotFound(description: "Job skill was not deleted");
 
     return deletedCount;
   }

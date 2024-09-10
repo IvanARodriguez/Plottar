@@ -10,12 +10,13 @@ public static class SkillHandlers
 {
   public static void MapSkillsEndpoints(this WebApplication app)
   {
-    var endpointGroup = app.MapGroup("/skills");
+    var endpoint = app.MapGroup("/skills");
 
-    endpointGroup.MapGet("/", GetSkillsAsync);
-    endpointGroup.MapPost("/", CreateSkillAsync);
+    endpoint.MapGet("/", GetAsync);
+    endpoint.MapPost("/", CreateAsync);
+    endpoint.MapGet("/{id:guid}", GetByIdAsync);
 
-    static async Task<IResult> GetSkillsAsync(
+    static async Task<IResult> GetAsync(
       HttpContext ctx,
       ISkillRepository skillRepo
     )
@@ -24,7 +25,7 @@ public static class SkillHandlers
       return Results.Ok(skills);
     };
 
-    static async Task<IResult> CreateSkillAsync(
+    static async Task<IResult> CreateAsync(
       HttpContext ctx,
       CreateSkillDto createSkillDto,
       ISkillRepository skillRepo
@@ -33,5 +34,15 @@ public static class SkillHandlers
           skills => Results.Ok(skills),
           errors => ErrorHandlers.GenerateProblemDetails(ctx, errors)
     );
+
+    static async Task<IResult> GetByIdAsync(
+      Guid id,
+      HttpContext ctx,
+      ISkillRepository skillRepo) =>
+     await skillRepo.GetSkillByIdAsync(id).Match(
+      skill => Results.Ok(skill),
+      errs => ErrorHandlers.GenerateProblemDetails(ctx, errs)
+     );
+
   }
 }

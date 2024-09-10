@@ -36,14 +36,13 @@ public class SkillRepository(ApplicationDbContext ctx, IMapper map) : ISkillRepo
     return _mapper.Map<SkillDto>(skill);
   }
 
-  public Task<ErrorOr<SkillDto>> DeleteSkillAsync(Guid id)
+  public async Task<ErrorOr<SkillDto?>> GetSkillByIdAsync(Guid id)
   {
-    throw new NotImplementedException();
-  }
+    var skill = await _context.Skills.FirstOrDefaultAsync(x => x.Id == id);
+    if (skill is null)
+      return Error.NotFound("Skill was not found");
 
-  public Task<ErrorOr<SkillDto?>> GetSkillByIdAsync(Guid id)
-  {
-    throw new NotImplementedException();
+    return _mapper.Map<SkillDto>(skill);
   }
 
   public async Task<IEnumerable<SkillDto>> GetSkillsAsync()
@@ -53,8 +52,4 @@ public class SkillRepository(ApplicationDbContext ctx, IMapper map) : ISkillRepo
     return _mapper.Map<IEnumerable<SkillDto>>(skills);
   }
 
-  public Task<ErrorOr<SkillDto>> UpdateSkillAsync(Guid id, SkillDto skillDto)
-  {
-    throw new NotImplementedException();
-  }
 }

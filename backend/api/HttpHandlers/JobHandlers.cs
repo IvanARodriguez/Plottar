@@ -16,6 +16,7 @@ public static class JobHandlers
     endpoints.MapGet("/{id:guid}", GetJobByIdAsync);
     endpoints.MapPut("/{id:guid}", UpdateJobAsync);
     endpoints.MapDelete("/{id:guid}", DeleteJobAsync);
+    endpoints.MapDelete("/{id:guid}/skills/{name}", DeleteJobSkillAsync);
 
     static async Task<IResult> GetJobsAsync(IJobRepository jobRepository)
     {
@@ -69,11 +70,23 @@ public static class JobHandlers
         errors => ErrorHandlers.GenerateProblemDetails(ctx, errors)
       );
     }
+
     static async Task<IResult> DeleteJobAsync(
      Guid id,
      IJobRepository jobRepository)
     {
       var options = await jobRepository.DeleteAsync(id);
+      return options.MatchFirst(
+       count => Results.NoContent(),
+       err => Results.Problem(err.Description, statusCode: StatusCodes.Status409Conflict)
+     );
+    }
+    static async Task<IResult> DeleteJobSkillAsync(
+     Guid id,
+     string name,
+     IJobRepository jobRepository)
+    {
+      var options = await jobRepository.DeleteJobSkillAsync(id, name);
       return options.MatchFirst(
        count => Results.NoContent(),
        err => Results.Problem(err.Description, statusCode: StatusCodes.Status409Conflict)
