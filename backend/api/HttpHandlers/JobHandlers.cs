@@ -2,6 +2,7 @@
 namespace Api.HttpHandlers;
 
 using Api.Constants;
+using Api.Filters;
 using Api.Interfaces;
 using Api.Models.Dtos.Job;
 
@@ -12,14 +13,22 @@ public static class JobHandlers
     var endpoints = app.MapGroup("/jobs");
 
     endpoints.MapGet("/", GetJobsAsync);
-    endpoints.MapPost("/", CreateJobAsync);
+
     endpoints.MapGet("/{id:guid}", GetJobByIdAsync);
-    endpoints.MapPut("/{id:guid}", UpdateJobAsync);
+
     endpoints.MapDelete("/{id:guid}", DeleteJobAsync);
+
     endpoints.MapDelete("/{id:guid}/skills/{name}", DeleteJobSkillAsync);
+
+    endpoints.MapPost("/", CreateJobAsync)
+      .WithRequestValidation<CreateJobDto>();
+
+    endpoints.MapPut("/{id:guid}", UpdateJobAsync)
+      .WithRequestValidation<CreateJobDto>();
 
     static async Task<IResult> GetJobsAsync(IJobRepository jobRepository)
     {
+
       var jobs = await jobRepository.GetAllJobsAsync();
       return Results.Ok(jobs);
     }

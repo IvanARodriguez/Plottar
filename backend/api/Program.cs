@@ -1,6 +1,4 @@
-using Api.Data;
 using Api.HttpHandlers;
-using Microsoft.EntityFrameworkCore;
 
 using Api;
 
