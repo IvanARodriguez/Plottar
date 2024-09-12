@@ -4,9 +4,9 @@ namespace Api.Validation;
 using Api.Models.Dtos.Job;
 using FluentValidation;
 
-public class JobRequestValidator : AbstractValidator<CreateJobDto>
+public class CreateJobRequestValidator : AbstractValidator<CreateJobDto>
 {
-  public JobRequestValidator()
+  public CreateJobRequestValidator()
   {
     RuleFor(job => job.Title)
       .NotNull()

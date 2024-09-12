@@ -2,6 +2,7 @@
 
 namespace Api.HttpHandlers;
 
+using Api.Filters;
 using Api.Interfaces;
 using Api.Models.Dtos.Skills;
 using ErrorOr;
@@ -13,7 +14,7 @@ public static class SkillHandlers
     var endpoint = app.MapGroup("/skills");
 
     endpoint.MapGet("/", GetAsync);
-    endpoint.MapPost("/", CreateAsync);
+    endpoint.MapPost("/", CreateAsync).WithRequestValidation<CreateSkillDto>();
     endpoint.MapGet("/{id:guid}", GetByIdAsync);
 
     static async Task<IResult> GetAsync(

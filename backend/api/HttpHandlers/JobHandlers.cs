@@ -24,7 +24,7 @@ public static class JobHandlers
       .WithRequestValidation<CreateJobDto>();
 
     endpoints.MapPut("/{id:guid}", UpdateJobAsync)
-      .WithRequestValidation<CreateJobDto>();
+      .WithRequestValidation<UpdateJobRequestDto>();
 
     static async Task<IResult> GetJobsAsync(IJobRepository jobRepository)
     {
