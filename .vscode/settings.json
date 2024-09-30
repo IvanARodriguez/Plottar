@@ -9,10 +9,13 @@
     "Mediat",
     "Npgsql",
     "plottar",
-    "Plottar"
+    "Plottar",
+    "Serilog"
   ],
   "[csharp]": {
     "editor.formatOnSave": true
   },
-  "FSharp.suggestGitignore": false
+  "FSharp.suggestGitignore": false,
+  "omnisharp.enableMsBuildLoadProjectsOnDemand": false,
+  "omnisharp.projectLoadTimeout": 60
 }

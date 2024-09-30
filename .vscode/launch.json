@@ -9,6 +9,12 @@
       "type": "dotnet",
       "request": "launch",
       "projectPath": "${workspaceFolder}/backend/api/api.csproj"
+    },
+    {
+      "name": ".Net Core Launch (web)",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/backend-clean/src/WebApi/WebApi.csproj"
     }
   ]
 }
