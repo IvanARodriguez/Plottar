@@ -1,0 +1,9 @@
+# Ignore unwanted files and folders
+bin/
+obj/
+*.user
+*.vs
+.git
+.gitignore
+.env
+request

@@ -1,0 +1,33 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+      target: dev
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5900
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=plottar;Username=postgres;Password=postgres
+    ports:
+      - "5900:5900"
+    volumes:
+      - ./backend/Api:/app  # Pointing to the correct folder
+      - /app/bin
+      - /app/obj
+    command: ["dotnet", "watch", "--project", "/app/api.csproj"]
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: plottar
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
